@@ -28,13 +28,11 @@ export const postPost = async (
   {
     validatingRequest( req, res, next );
 
-    const { title } = req.body;
-
-    const { userid } = req.headers;
+    const { title, userId} = req.body;
 
     const post = await createPost( {
-      title: title as string,
-      userId: userid as string
+      title,
+      userId
     } );
 
     return res.status( 201 ).json( {

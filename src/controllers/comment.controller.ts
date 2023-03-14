@@ -4,6 +4,7 @@ import { getAllComments } from '../services/comment/getComment.service';
 import { getCommentsByPostId } from '../services/comment/getCommentByPostId.service';
 import { createComment } from '../services/comment/postComment.service';
 import { addComment } from '../services/posts/commentOnPost.service';
+import { getCommentsByPostIdRedis } from '../services/redis/getCommnetsByPostId.redis';
 
 export const getComments = async (
   req: Request,
@@ -27,16 +28,14 @@ export const postComment = async (
   try
   {
     // validatingRequest(req, res, next);
-    const { body } = req.body;
+    const { descriptions, userId} = req.body;
     const { postId } = req.params;
-    const { userid } = req.headers;
 
     const comment = await createComment( {
-      body,
-      userId: String( userid )
+      descriptions,
+      userId
     } );
 
-    console.log( "cdbbxvfvd", comment )
     await addComment( {
       postId,
       commentId: comment._id,
@@ -63,11 +62,15 @@ export const commentsPagination = async (
 
   const { limit, skip } = req.query;
 
-  const comments = await getCommentsByPostId( {
-    postId: id,
-    limit: parseInt( limit as string ) || 3,
-    skip: parseInt( skip as string ) || 0,
-  } );
+  // const comments = await getCommentsByPostId( {
+  //   postId: id,
+  //   limit: parseInt( limit as string ) || 3,
+  //   skip: parseInt( skip as string ) || 0,
+  // } );
+
+  const key = id+'_'+limit+'_'+skip;
+  const comments = await getCommentsByPostIdRedis(key);
+
   return res.json( {
     message: 'Comments fetched',
     data: comments,

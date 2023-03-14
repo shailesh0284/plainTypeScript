@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { IComment } from '../interfaces/comment.interface';
 
 export const commentSchema = new mongoose.Schema( {
-  body: { type: String, required: true },
+  descriptions: { type: String, required: true },
   date: { type: Date, required: true },
   userId: { type: mongoose.Types.ObjectId, required: true },
 } );

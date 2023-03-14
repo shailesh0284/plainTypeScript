@@ -7,6 +7,8 @@ export const getCommentsByPostId = async ( data: {
   skip: number;
 } ): Promise<any> =>
 {
+
+  console.log(data.postId, "DSFghfds")
   const comments = await postModel.aggregate( [
     {
       $match: { _id: new mongoose.Types.ObjectId( data.postId ) },
@@ -18,8 +20,8 @@ export const getCommentsByPostId = async ( data: {
         foreignField: '_id',
         pipeline: [
           { $sort: { date: -1 } },
-          { $skip: data.skip },
-          { $limit: data.limit },
+          { $skip: Number(data.skip) },
+          { $limit: Number(data.limit) },
         ],
         as: 'comments',
       },
@@ -28,13 +30,6 @@ export const getCommentsByPostId = async ( data: {
     {
       $lookup: {
         from: "users",
-        // let: {
-        //   userId: { $toObjectId: "$comments.userId" },
-        //   users: "$users"
-        // },
-        // pipeline: [
-        //   { $match: { $expr: { $eq: [ "$_id", "$$userId" ] } } },
-        // ],
         localField: 'comments.userId',
         foreignField: '_id',
         as: "usersDetails"
@@ -45,7 +40,7 @@ export const getCommentsByPostId = async ( data: {
         // title: 0,
         // likes: 0,
         comments: {
-          userId: 1, body: 1,
+          userId: 1, descriptions: 1,
           usersDetails: "$usersDetails"
         },
         // users: { email: 0, avatar: 0, __v: 0 },

@@ -6,5 +6,8 @@ export const postValidator = [
     .withMessage( 'Title can not be empty' )
     .bail(),
 
-  header( 'userid' ).exists( { checkFalsy: true } ).withMessage( 'Please provide userId in headers' ).bail(),
-];
+  check( 'userId' )
+    .isLength({min:0})
+    .withMessage( 'Please provide valid userId' )
+    .bail(),
+]

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface IComment extends mongoose.Schema
 {
-  body: string;
+  descriptions: string;
   date?: Date;
   userId: mongoose.Types.ObjectId;
 }
@@ -10,7 +10,7 @@ export interface IComment extends mongoose.Schema
 
 export interface ICommentParams
 {
-  body: string;
+  descriptions: string;
   date?: Date;
   userId: string;
 }
